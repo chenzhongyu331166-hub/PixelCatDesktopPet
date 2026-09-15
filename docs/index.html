@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelCatDesktopPet - 像素黑猫桌宠</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .providers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .provider {
+            background: #e9ecef;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .tech-item {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        .tech-item .icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .vibe-coding {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 30px 0;
+        }
+        .vibe-coding h2 {
+            color: white;
+        }
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PixelCatDesktopPet</h1>
+        <p class="subtitle">一只住在你 Windows 桌面上的像素黑猫</p>
+        <div>
+            <span class="badge">C# / .NET 8.0</span>
+            <span class="badge">WinForms</span>
+            <span class="badge">AI Chat</span>
+            <span class="badge">Vibe Coding</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="text-center">
+                <h2>PixelCatDesktopPet</h2>
+                <p style="font-size: 1.2em; color: #666; margin-bottom: 30px;">
+                    一个基于 Vibe Coding 开发的 Windows 桌面宠物，支持 8+ 种 AI API 提供商
+                </p>
+                <a href="https://github.com/chenzhongyu331166-hub/PixelCatDesktopPet/releases" class="btn">
+                    Download v1.0
+                </a>
+                <a href="https://github.com/chenzhongyu331166-hub/PixelCatDesktopPet" class="btn btn-secondary">
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <h3>Desktop Pet</h3>
+                    <p>像素黑猫精灵，透明窗口渲染，7种动画 + 行走 + 吃饭 + 睡觉</p>
+                </div>
+                <div class="feature">
+                    <h3>AI Chat</h3>
+                    <p>支持多种 AI API 提供商，用户自定义配置即可对话</p>
+                </div>
+                <div class="feature">
+                    <h3>Smart Behaviors</h3>
+                    <p>自主巡逻、主动说话、时间感知对话</p>
+                </div>
+                <div class="feature">
+                    <h3>Persistent Storage</h3>
+                    <p>聊天记录本地持久化存储</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Supported AI Providers</h2>
+            <p>用户只需填写 API Key，即可使用以下 AI 服务：</p>
+            <div class="providers">
+                <span class="provider">OpenAI</span>
+                <span class="provider">DeepSeek</span>
+                <span class="provider">通义千问</span>
+                <span class="provider">月之暗面 (Kimi)</span>
+                <span class="provider">智谱 AI</span>
+                <span class="provider">零一万物</span>
+                <span class="provider">魔搭 ModelScope</span>
+                <span class="provider">Ollama (本地)</span>
+                <span class="provider">任意 OpenAI 兼容接口</span>
+            </div>
+        </div>
+
+        <div class="vibe-coding">
+            <h2>Vibe Coding</h2>
+            <p>本项目是 Vibe Coding 的实践案例 —— 全程使用 AI 辅助编程完成。</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">1</div>
+                    <div>开发天数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3300+</div>
+                    <div>代码行数</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">8+</div>
+                    <div>AI 提供商</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Tech Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="icon">C#</div>
+                    <div>C# Language</div>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">.NET</div>
+                    <div>.NET 8.0</div>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">WinForms</div>
+                    <div>Windows Forms</div>
+                </div>
+                <div class="tech-item">
+                    <div class="icon">Win32</div>
+                    <div>Layered Window</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card text-center">
+            <h2>Get Started</h2>
+            <p style="margin-bottom: 20px;">下载 exe，解压运行，配置你的 API Key，即可开始与像素黑猫聊天！</p>
+            <a href="https://github.com/chenzhongyu331166-hub/PixelCatDesktopPet/releases" class="btn">
+                Download Now
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>PixelCatDesktopPet &copy; 2026 | Built with Vibe Coding</p>
+    </footer>
+</body>
+</html>
