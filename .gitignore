@@ -1,0 +1,36 @@
+# Build results
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.cache
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Publish results
+publish/
+publish_test/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Preview images
+*.jpg
+*_预览.*
+*_透明底.*
+*新形态*
+*新姿态*
+*新行走*
