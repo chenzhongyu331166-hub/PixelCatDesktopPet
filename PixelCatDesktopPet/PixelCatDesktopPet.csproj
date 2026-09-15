@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>像素黑猫桌宠</AssemblyName>
+    <RootNamespace>PixelCatDesktopPet</RootNamespace>
+    <ApplicationIcon>Assets\cat.ico</ApplicationIcon>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\cat.png" LogicalName="PixelCatDesktopPet.Assets.cat.png" />
+    <EmbeddedResource Include="Assets\cat_lick_1.png" LogicalName="PixelCatDesktopPet.Assets.cat_lick_1.png" />
+    <EmbeddedResource Include="Assets\cat_lick_2.png" LogicalName="PixelCatDesktopPet.Assets.cat_lick_2.png" />
+    <EmbeddedResource Include="Assets\cat_walk_1.png" LogicalName="PixelCatDesktopPet.Assets.cat_walk_1.png" />
+    <EmbeddedResource Include="Assets\cat_walk_2.png" LogicalName="PixelCatDesktopPet.Assets.cat_walk_2.png" />
+    <EmbeddedResource Include="Assets\cat_sleep.png" LogicalName="PixelCatDesktopPet.Assets.cat_sleep.png" />
+    <EmbeddedResource Include="Assets\cat_eat_1.png" LogicalName="PixelCatDesktopPet.Assets.cat_eat_1.png" />
+    <EmbeddedResource Include="Assets\cat_eat_2.png" LogicalName="PixelCatDesktopPet.Assets.cat_eat_2.png" />
+  </ItemGroup>
+</Project>
