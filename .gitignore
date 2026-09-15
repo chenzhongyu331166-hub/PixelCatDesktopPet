@@ -16,6 +16,7 @@ obj/
 # Publish results
 publish/
 publish_test/
+publish_release/
 
 # NuGet
 *.nupkg
