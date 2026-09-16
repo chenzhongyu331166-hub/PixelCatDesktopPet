@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>PixelCatAndroid</RootNamespace>
+    <AssemblyName>PixelCatAndroid</AssemblyName>
+    <ApplicationId>com.pixelcat.desktoppet</ApplicationId>
+    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp.Views" Version="2.88.7" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Android" Version="2.88.7" />
+  </ItemGroup>
+
+</Project>

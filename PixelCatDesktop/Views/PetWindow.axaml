@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PixelCatDesktop.ViewModels"
+        x:Class="PixelCatDesktop.Views.PetWindow"
+        Title="Pixel Cat Desktop Pet"
+        Width="200" Height="250"
+        WindowStartupLocation="Manual"
+        SystemDecorations="None"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Background="Transparent"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaIsTranslucent="True"
+        CanResize="False">
+    
+    <Window.DataContext>
+        <vm:PetWindowViewModel />
+    </Window.DataContext>
+
+    <Panel>
+        <!-- 猫咪精灵渲染区域 -->
+        <Canvas Name="PetCanvas" 
+                PointerPressed="OnCanvasPointerPressed"
+                PointerMoved="OnCanvasMoved"
+                PointerReleased="OnCanvasReleased"
+                Background="Transparent" />
+        
+        <!-- 气泡窗口 -->
+        <Border Name="BubbleBorder"
+                IsVisible="{Binding IsBubbleVisible}"
+                Background="#EE333333"
+                CornerRadius="12"
+                Padding="12,8"
+                MaxWidth="200"
+                Canvas.Top="-60"
+                Canvas.Left="0">
+            <TextBlock Text="{Binding BubbleText}"
+                       Foreground="White"
+                       FontSize="13"
+                       TextWrapping="Wrap" />
+        </Border>
+    </Panel>
+</Window>
