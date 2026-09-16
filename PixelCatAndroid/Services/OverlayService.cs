@@ -25,7 +25,7 @@ namespace PixelCatAndroid.Services
         private const string NOTIFICATION_CHANNEL_ID = "pixelcat_overlay";
         private const int NOTIFICATION_ID = 1001;
 
-        private WindowManager? _windowManager;
+        private IWindowManager? _windowManager;
         private SpriteView? _spriteView;
         private WindowManagerLayoutParams? _layoutParams;
         private HttpClient? _httpClient;
@@ -38,8 +38,8 @@ namespace PixelCatAndroid.Services
         private float _viewStartY;
         private bool _isDragging;
         private long _touchStartTime;
-        private const int TAP_THRESHOLD = 200; // 点击判定阈值（毫秒）
-        private const int TAP_DISTANCE = 30;   // 点击判定距离（像素）
+        private const int TAP_THRESHOLD_MS = 200;
+        private const int TAP_DISTANCE_PX = 30;
 
         // 对话历史
         private readonly List<ChatMessage> _chatHistory = new();
@@ -294,7 +294,7 @@ namespace PixelCatAndroid.Services
         /// <summary>
         /// 悬浮窗触摸事件处理
         /// </summary>
-        private class OverlayTouchListener : Java.Lang.Object, IOnTouchListener
+        private class OverlayTouchListener : Java.Lang.Object, View.IOnTouchListener
         {
             private readonly OverlayService _service;
 
@@ -322,7 +322,7 @@ namespace PixelCatAndroid.Services
                         float dx = e.RawX - _service._touchStartX;
                         float dy = e.RawY - _service._touchStartY;
 
-                        if (Math.Abs(dx) > _service.TAP_DISTANCE || Math.Abs(dy) > _service.TAP_DISTANCE)
+                        if (Math.Abs(dx) > TAP_DISTANCE_PX || Math.Abs(dy) > TAP_DISTANCE_PX)
                         {
                             _service._isDragging = true;
                         }
@@ -338,7 +338,7 @@ namespace PixelCatAndroid.Services
                     case MotionEventActions.Up:
                         long elapsed = (DateTime.UtcNow.Ticks - _service._touchStartTime) / TimeSpan.TicksPerMillisecond;
 
-                        if (!_service._isDragging && elapsed < _service.TAP_THRESHOLD)
+                        if (!_service._isDragging && elapsed < TAP_THRESHOLD_MS)
                         {
                             // 点击事件 - 触发聊天
                             _service.OnCatTapped();

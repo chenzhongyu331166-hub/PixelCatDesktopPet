@@ -24,9 +24,6 @@ namespace PixelCatAndroid.Views
         {
             base.OnCreate(savedInstanceState);
 
-            // 设置布局
-            SetContentView(Android.Resource.Layout.ActivityListContent);
-
             // 使用代码创建简单布局
             var scrollView = new ScrollView(this);
             var layout = new LinearLayout(this)
@@ -68,9 +65,9 @@ namespace PixelCatAndroid.Views
             _editSystemPrompt = new EditText(this)
             {
                 Text = "你是一只可爱的像素猫咪桌宠。用简短、可爱的语气回答问题，偶尔卖萌。",
-                InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextFlagMultiLine,
-                MinLines = 3
+                InputType = Android.Text.InputTypes.ClassText | Android.Text.InputTypes.TextFlagMultiLine
             };
+            _editSystemPrompt.SetMinLines(3);
             layout.AddView(_editSystemPrompt);
 
             // 保存按钮

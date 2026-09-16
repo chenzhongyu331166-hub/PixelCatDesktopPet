@@ -11,11 +11,11 @@ namespace PixelCatAndroid.Views
     /// </summary>
     public class SpriteView : SKCanvasView
     {
-        // 猫咪精灵帧（简单的像素猫，每帧 16x16 像素）
-        private static readonly SKColor[,] IdleFrame1 = GenerateCatFrame(0);
-        private static readonly SKColor[,] IdleFrame2 = GenerateCatFrame(1);
-        private static readonly SKColor[,] WalkFrame1 = GenerateCatFrame(2);
-        private static readonly SKColor[,] WalkFrame2 = GenerateCatFrame(3);
+        // 猫咪精灵帧
+        private static readonly SKColor[,] IdleFrame1 = new SKColor[16, 16];
+        private static readonly SKColor[,] IdleFrame2 = new SKColor[16, 16];
+        private static readonly SKColor[,] WalkFrame1 = new SKColor[16, 16];
+        private static readonly SKColor[,] WalkFrame2 = new SKColor[16, 16];
 
         private SKBitmap? _catBitmap;
         private int _currentFrame;
@@ -47,7 +47,6 @@ namespace PixelCatAndroid.Views
 
         public SpriteView(Context context) : base(context)
         {
-            EnableTouchEvents = true;
             InitBitmap();
         }
 
