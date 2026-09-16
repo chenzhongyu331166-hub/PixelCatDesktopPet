@@ -15,7 +15,6 @@
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.3" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.3" />
     <PackageReference Include="SkiaSharp" Version="2.88.9" />
-    <PackageReference Include="SkiaSharp.Views.Avalonia" Version="2.88.9" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />

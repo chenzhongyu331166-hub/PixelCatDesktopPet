@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:PixelCatDesktop.ViewModels"
         x:Class="PixelCatDesktop.Views.PetWindow"
+        x:DataType="vm:PetWindowViewModel"
         Title="Pixel Cat Desktop Pet"
         Width="200" Height="250"
         WindowStartupLocation="Manual"
@@ -12,7 +13,6 @@
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaIsTranslucent="True"
         CanResize="False">
     
     <Window.DataContext>
@@ -20,14 +20,12 @@
     </Window.DataContext>
 
     <Panel>
-        <!-- 猫咪精灵渲染区域 -->
         <Canvas Name="PetCanvas" 
                 PointerPressed="OnCanvasPointerPressed"
                 PointerMoved="OnCanvasMoved"
                 PointerReleased="OnCanvasReleased"
                 Background="Transparent" />
         
-        <!-- 气泡窗口 -->
         <Border Name="BubbleBorder"
                 IsVisible="{Binding IsBubbleVisible}"
                 Background="#EE333333"

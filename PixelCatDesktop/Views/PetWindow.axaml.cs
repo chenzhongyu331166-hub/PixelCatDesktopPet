@@ -1,10 +1,10 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using PixelCatDesktop.ViewModels;
 using System;
-using System.Timers;
 
 namespace PixelCatDesktop.Views;
 
@@ -20,10 +20,8 @@ public partial class PetWindow : Window
         _viewModel = new PetWindowViewModel();
         DataContext = _viewModel;
 
-        // 窗口加载后移动到屏幕右下角
         Opened += OnWindowOpened;
 
-        // 动画定时器
         var animTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
         animTimer.Tick += (_, _) => _viewModel.UpdateAnimation();
         animTimer.Start();
@@ -31,7 +29,6 @@ public partial class PetWindow : Window
 
     private void OnWindowOpened(object? sender, EventArgs e)
     {
-        // 移动到屏幕右下角
         var screen = Screens?.Primary;
         if (screen != null)
         {
