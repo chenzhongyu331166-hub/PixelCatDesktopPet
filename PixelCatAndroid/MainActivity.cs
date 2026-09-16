@@ -11,7 +11,7 @@ namespace PixelCatAndroid
     /// </summary>
     [Activity(Label = "PixelCat", MainLauncher = true,
         Theme = "@android:style/Theme.Material.Light.NoActionBar",
-        LaunchMode = LaunchMode.SingleTop)]
+        LaunchMode = Android.Content.PM.LaunchMode.SingleTop)]
     public class MainActivity : Activity
     {
         private const int OVERLAY_PERMISSION_REQUEST = 1001;
