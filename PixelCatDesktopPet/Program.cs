@@ -155,35 +155,19 @@ internal sealed class PetWindow : LayeredForm
     private readonly Bitmap _idleSprite;
     private readonly Bitmap _lickSprite1;
     private readonly Bitmap _lickSprite2;
-    private readonly Bitmap _lickSprite3;
     private readonly Bitmap _walkSprite1;
     private readonly Bitmap _walkSprite2;
-    private readonly Bitmap _walkSprite3;
-    private readonly Bitmap _walkSprite4;
-    private readonly Bitmap _walkSprite5;
-    private readonly Bitmap _walkSprite6;
-    private readonly Bitmap _walkSprite7;
-    private readonly Bitmap _walkSprite8;
     private readonly Bitmap _sleepSprite;
     private readonly Bitmap _eatSprite1;
     private readonly Bitmap _eatSprite2;
-    private readonly Bitmap _eatSprite3;
     private readonly byte[] _idleAlpha;
     private readonly byte[] _lickAlpha1;
     private readonly byte[] _lickAlpha2;
-    private readonly byte[] _lickAlpha3;
     private readonly byte[] _walkAlpha1;
     private readonly byte[] _walkAlpha2;
-    private readonly byte[] _walkAlpha3;
-    private readonly byte[] _walkAlpha4;
-    private readonly byte[] _walkAlpha5;
-    private readonly byte[] _walkAlpha6;
-    private readonly byte[] _walkAlpha7;
-    private readonly byte[] _walkAlpha8;
     private readonly byte[] _sleepAlpha;
     private readonly byte[] _eatAlpha1;
     private readonly byte[] _eatAlpha2;
-    private readonly byte[] _eatAlpha3;
     private readonly int _spriteWidth;
     private readonly int _spriteHeight;
     private readonly float _initialScale;
@@ -198,7 +182,6 @@ internal sealed class PetWindow : LayeredForm
     private readonly ToolStripMenuItem _breakMenu;
     private readonly System.Windows.Forms.Timer _animationTimer;
     private readonly System.Windows.Forms.Timer _behaviorTimer;
-    private readonly System.Windows.Forms.Timer _topMostTimer;
     private readonly Stopwatch _animationWatch = new();
     private readonly Stopwatch _walkWatch = new();
     private readonly Random _random = new();
@@ -212,7 +195,7 @@ internal sealed class PetWindow : LayeredForm
         Sleeping
     }
 
-    private float _scaleFactor = 0.42f;
+    private float _scaleFactor = 0.85f;
     private int _petWidth;
     private int _petHeight;
     private int _sideMargin;
@@ -270,39 +253,25 @@ internal sealed class PetWindow : LayeredForm
         _idleSprite = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat.png");
         _lickSprite1 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_lick_1.png");
         _lickSprite2 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_lick_2.png");
-        _lickSprite3 = BlendSprites(_lickSprite1, _lickSprite2, 0.5f);
         _walkSprite1 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_walk_1.png");
         _walkSprite2 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_walk_2.png");
-        // 用两张行走帧插值出六个中间帧，组成八帧步态循环，动作更流畅。
-        _walkSprite3 = BlendSprites(_walkSprite1, _walkSprite2, 1f / 7f);
-        _walkSprite4 = BlendSprites(_walkSprite1, _walkSprite2, 2f / 7f);
-        _walkSprite5 = BlendSprites(_walkSprite1, _walkSprite2, 3f / 7f);
-        _walkSprite6 = BlendSprites(_walkSprite1, _walkSprite2, 4f / 7f);
-        _walkSprite7 = BlendSprites(_walkSprite1, _walkSprite2, 5f / 7f);
-        _walkSprite8 = BlendSprites(_walkSprite1, _walkSprite2, 6f / 7f);
         _sleepSprite = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_sleep.png");
         _eatSprite1 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_eat_1.png");
         _eatSprite2 = LoadEmbeddedSprite("PixelCatDesktopPet.Assets.cat_eat_2.png");
-        _eatSprite3 = BlendSprites(_eatSprite1, _eatSprite2, 0.5f);
         _spriteWidth = _idleSprite.Width;
         _spriteHeight = _idleSprite.Height;
         _idleAlpha = ExtractAlpha(_idleSprite);
         _lickAlpha1 = ExtractAlpha(_lickSprite1);
         _lickAlpha2 = ExtractAlpha(_lickSprite2);
-        _lickAlpha3 = ExtractAlpha(_lickSprite3);
         _walkAlpha1 = ExtractAlpha(_walkSprite1);
         _walkAlpha2 = ExtractAlpha(_walkSprite2);
-        _walkAlpha3 = ExtractAlpha(_walkSprite3);
-        _walkAlpha4 = ExtractAlpha(_walkSprite4);
-        _walkAlpha5 = ExtractAlpha(_walkSprite5);
-        _walkAlpha6 = ExtractAlpha(_walkSprite6);
-        _walkAlpha7 = ExtractAlpha(_walkSprite7);
-        _walkAlpha8 = ExtractAlpha(_walkSprite8);
         _sleepAlpha = ExtractAlpha(_sleepSprite);
         _eatAlpha1 = ExtractAlpha(_eatSprite1);
         _eatAlpha2 = ExtractAlpha(_eatSprite2);
-        _eatAlpha3 = ExtractAlpha(_eatSprite3);
         _initialScale = 240f / _spriteHeight;
+
+        // 加载持久化的缩放比例
+        _scaleFactor = LoadPetScale();
 
         _bubble = new BubbleWindow();
         _menu = CreateMenu(out _topMostItem, out _autoMoveItem, out _proactiveTalkItem, out _breakReminderItem, out _breakMenu);
@@ -310,15 +279,13 @@ internal sealed class PetWindow : LayeredForm
         _animationTimer.Tick += (_, _) => RenderFrame();
         _behaviorTimer = new System.Windows.Forms.Timer { Interval = 40 };
         _behaviorTimer.Tick += (_, _) => BehaviorTick();
-        _topMostTimer = new System.Windows.Forms.Timer { Interval = 2000 };
-        _topMostTimer.Tick += (_, _) => ReassertTopMost();
         _nextProactiveTalkAt = DateTime.Now.AddMinutes(_random.Next(2, 5));
 
         UpdateDimensions();
         PositionAtBottomRight();
         TopMost = true;
         _behaviorTimer.Start();
-        _topMostTimer.Start();
+        try { File.WriteAllText(Path.Combine(Path.GetTempPath(), "pet-debug.txt"), $"Constructor done: Size={Size}, Location={Location}, Scale={_scaleFactor}\n"); } catch { }
     }
 
     private static Bitmap LoadEmbeddedSprite(string resourceName)
@@ -551,6 +518,18 @@ internal sealed class PetWindow : LayeredForm
 
     private static string? AutoStartTarget()
     {
+        // 优先使用 Environment.ProcessPath（.NET 6+），比 MainModule.FileName 更可靠
+        string? path = Environment.ProcessPath;
+        if (!string.IsNullOrEmpty(path))
+        {
+            return path;
+        }
+        // 回退：当前程序集路径
+        string? asmPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        if (!string.IsNullOrEmpty(asmPath) && File.Exists(asmPath))
+        {
+            return asmPath;
+        }
         return Process.GetCurrentProcess().MainModule?.FileName;
     }
 
@@ -753,6 +732,37 @@ internal sealed class PetWindow : LayeredForm
             _petHeight);
     }
 
+    private static string PetSettingsPath() =>
+        Path.Combine(AppContext.BaseDirectory, "pet-settings.json");
+
+    private static float LoadPetScale()
+    {
+        try
+        {
+            string path = PetSettingsPath();
+            if (File.Exists(path))
+            {
+                var doc = JsonDocument.Parse(File.ReadAllText(path));
+                if (doc.RootElement.TryGetProperty("ScaleFactor", out JsonElement el))
+                {
+                    float val = el.GetSingle();
+                    if (val >= 0.35f && val <= 3.0f) return val;
+                }
+            }
+        }
+        catch { }
+        return 0.85f;
+    }
+
+    private static void SavePetScale(float scale)
+    {
+        try
+        {
+            File.WriteAllText(PetSettingsPath(), $"{{\"ScaleFactor\":{scale}}}");
+        }
+        catch { }
+    }
+
     private void SetScaleFactor(float factor)
     {
         factor = Math.Clamp(factor, 0.35f, 3.0f);
@@ -764,6 +774,7 @@ internal sealed class PetWindow : LayeredForm
         Point anchor = GetPetAnchorScreen();
         CancelWalk();
         _scaleFactor = factor;
+        SavePetScale(factor);
         UpdateDimensions();
         Location = new Point(
             anchor.X - (int)Math.Round(_baseRect.X + _baseRect.Width / 2f),
@@ -789,6 +800,7 @@ internal sealed class PetWindow : LayeredForm
     protected override void OnShown(EventArgs e)
     {
         base.OnShown(e);
+        try { File.AppendAllText(Path.Combine(Path.GetTempPath(), "pet-debug.txt"), $"OnShown: Size={Size}, Location={Location}, Visible={Visible}, TopMost={TopMost}, Handle={Handle}\n"); } catch { }
         RenderFrame();
         if (!_welcomeShown)
         {
@@ -1005,40 +1017,6 @@ internal sealed class PetWindow : LayeredForm
         return phrases[index];
     }
 
-    private static Bitmap BlendSprites(Bitmap from, Bitmap to, float weight)
-    {
-        int width = Math.Min(from.Width, to.Width);
-        int height = Math.Min(from.Height, to.Height);
-        var result = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-        using var graphics = Graphics.FromImage(result);
-        graphics.CompositingMode = CompositingMode.SourceOver;
-        graphics.CompositingQuality = CompositingQuality.HighQuality;
-        graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-        graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-        // weight 表示 to 混合进结果的比例：先画 from（不透明度 weight），再叠 to（不透明度 1-weight）。
-        // SourceOver 逐像素合成后，结果近似 from*weight + to*(1-weight)。
-        float fromOpacity = Math.Clamp(weight, 0f, 1f);
-        float toOpacity = Math.Clamp(1f - weight, 0f, 1f);
-        using var fromAttributes = new ImageAttributes();
-        fromAttributes.SetColorMatrix(CreateColorMatrix(fromOpacity));
-        using var toAttributes = new ImageAttributes();
-        toAttributes.SetColorMatrix(CreateColorMatrix(toOpacity));
-        graphics.DrawImage(from, new Rectangle(0, 0, width, height), 0, 0, width, height, GraphicsUnit.Pixel, fromAttributes);
-        graphics.DrawImage(to, new Rectangle(0, 0, width, height), 0, 0, width, height, GraphicsUnit.Pixel, toAttributes);
-        return result;
-    }
-
-    private static ColorMatrix CreateColorMatrix(float alpha)
-    {
-        return new ColorMatrix(new float[][]
-        {
-            [1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0],
-            [0, 0, 1, 0, 0],
-            [0, 0, 0, alpha, 0],
-            [0, 0, 0, 0, 1]
-        });
-    }
 
     private void StartAnimation(PetAnimation animation)
     {
@@ -1051,7 +1029,15 @@ internal sealed class PetWindow : LayeredForm
 
     private void BehaviorTick()
     {
-        if (IsDisposed || !Visible)
+        if (IsDisposed)
+        {
+            return;
+        }
+
+        // 无论窗口是否可见，都强制保持置顶
+        ReassertTopMost();
+
+        if (!Visible)
         {
             return;
         }
@@ -1525,26 +1511,13 @@ internal sealed class PetWindow : LayeredForm
         return -((float)Math.Cos(Math.PI * t) - 1f) / 2f;
     }
 
-    private int GetEatingFrame()
-    {
-        // 埋头吃为主，偶尔抬头舔嘴，更自然的三帧循环
-        int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 450.0) % 9;
-        if (phase == 3) return 3;  // 抬头
-        if (phase == 6) return 2;  // 舔嘴
-        return 1;  // 埋头吃
-    }
-
     private Bitmap GetCurrentSprite()
     {
         if (_activity == PetActivity.Eating)
         {
-            int frame = GetEatingFrame();
-            return frame switch
-            {
-                2 => _eatSprite2,
-                3 => _eatSprite3,
-                _ => _eatSprite1
-            };
+            // 交替两帧：低头吃 -> 抬头舔嘴，300ms 一帧
+            int frame = (int)(_animationWatch.Elapsed.TotalMilliseconds / 300.0) % 2;
+            return frame == 0 ? _eatSprite1 : _eatSprite2;
         }
         if (_activity == PetActivity.Sleeping)
         {
@@ -1552,32 +1525,15 @@ internal sealed class PetWindow : LayeredForm
         }
         if (_isWalking)
         {
-            // 八帧平滑步态循环，帧率降低使动作更自然
-            int frame = (int)(_walkWatch.Elapsed.TotalMilliseconds / 140.0) % 8;
-            return frame switch
-            {
-                0 => _walkSprite1,
-                1 => _walkSprite3,
-                2 => _walkSprite4,
-                3 => _walkSprite2,
-                4 => _walkSprite5,
-                5 => _walkSprite6,
-                6 => _walkSprite2,
-                _ => _walkSprite7
-            };
+            // 两帧步态循环，180ms 一帧
+            int frame = (int)(_walkWatch.Elapsed.TotalMilliseconds / 180.0) % 2;
+            return frame == 0 ? _walkSprite1 : _walkSprite2;
         }
         if (_currentAnimation == PetAnimation.Lick)
         {
-            // 舔毛：三帧循环，头部左右摆动更自然
-            int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 280.0) % 5;
-            return phase switch
-            {
-                0 => _lickSprite1,
-                1 => _lickSprite3,
-                2 => _lickSprite2,
-                3 => _lickSprite3,
-                _ => _lickSprite1
-            };
+            // 舔毛：两帧循环，250ms 一帧
+            int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 250.0) % 2;
+            return phase == 0 ? _lickSprite1 : _lickSprite2;
         }
         return _idleSprite;
     }
@@ -1586,13 +1542,8 @@ internal sealed class PetWindow : LayeredForm
     {
         if (_activity == PetActivity.Eating)
         {
-            int frame = GetEatingFrame();
-            return frame switch
-            {
-                2 => _eatAlpha2,
-                3 => _eatAlpha3,
-                _ => _eatAlpha1
-            };
+            int frame = (int)(_animationWatch.Elapsed.TotalMilliseconds / 300.0) % 2;
+            return frame == 0 ? _eatAlpha1 : _eatAlpha2;
         }
         if (_activity == PetActivity.Sleeping)
         {
@@ -1600,30 +1551,13 @@ internal sealed class PetWindow : LayeredForm
         }
         if (_isWalking)
         {
-            int frame = (int)(_walkWatch.Elapsed.TotalMilliseconds / 140.0) % 8;
-            return frame switch
-            {
-                0 => _walkAlpha1,
-                1 => _walkAlpha3,
-                2 => _walkAlpha4,
-                3 => _walkAlpha2,
-                4 => _walkAlpha5,
-                5 => _walkAlpha6,
-                6 => _walkAlpha2,
-                _ => _walkAlpha7
-            };
+            int frame = (int)(_walkWatch.Elapsed.TotalMilliseconds / 180.0) % 2;
+            return frame == 0 ? _walkAlpha1 : _walkAlpha2;
         }
         if (_currentAnimation == PetAnimation.Lick)
         {
-            int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 280.0) % 5;
-            return phase switch
-            {
-                0 => _lickAlpha1,
-                1 => _lickAlpha3,
-                2 => _lickAlpha2,
-                3 => _lickAlpha3,
-                _ => _lickAlpha1
-            };
+            int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 250.0) % 2;
+            return phase == 0 ? _lickAlpha1 : _lickAlpha2;
         }
         return _idleAlpha;
     }
@@ -1632,33 +1566,30 @@ internal sealed class PetWindow : LayeredForm
     {
         if (_activity == PetActivity.Sleeping)
         {
-            // 睡着后缓慢的呼吸起伏
+            // 睡着后呼吸起伏 + 轻微左右摇摆
             double seconds = _animationWatch.Elapsed.TotalSeconds;
-            float breath = (float)Math.Sin(seconds * Math.PI / 1.9) * 0.5f + 0.5f; // 约 3.8 秒一次呼吸
-            float scaleY = 1f + 0.028f * breath;
-            return (0, 0, 1f - 0.014f * breath, scaleY);
+            float breath = (float)Math.Sin(seconds * Math.PI / 1.9) * 0.5f + 0.5f;
+            float scaleY = 1f + 0.05f * breath;
+            float scaleX = 1f - 0.025f * breath;
+            float sway = (float)Math.Sin(seconds * Math.PI / 2.5) * 2f;
+            return (sway, 0, scaleX, scaleY);
         }
         if (_activity == PetActivity.Eating)
         {
-            // 吃饭：更自然的埋头-抬头-舔嘴动作
-            double seconds = _animationWatch.Elapsed.TotalSeconds;
-            int phase = (int)(_animationWatch.Elapsed.TotalMilliseconds / 450.0) % 9;
-            if (phase == 3)
+            // 吃饭配合帧切换：低头帧时下压，抬头帧时上升
+            double sec = _animationWatch.Elapsed.TotalSeconds;
+            float cycle = (float)(_animationWatch.Elapsed.TotalMilliseconds % 600.0) / 600f;
+            if (cycle < 0.5f)
             {
-                // 抬头
-                float rise = (float)Math.Sin(Math.PI * ((_animationWatch.Elapsed.TotalMilliseconds / 450.0) % 1.0));
-                return (0, -4.5f * rise, 1f + 0.02f * rise, 1f - 0.02f * rise);
+                // 低头吃：轻微下压 + 身体前倾
+                float p = cycle / 0.5f;
+                float nod = (float)Math.Sin(p * Math.PI) * 4f;
+                return (0, nod, 1f + 0.02f * (float)Math.Sin(p * Math.PI), 1f - 0.02f * (float)Math.Sin(p * Math.PI));
             }
-            if (phase == 6)
-            {
-                // 舔嘴：轻微左右摆动
-                float lick = (float)Math.Sin(seconds * Math.PI * 4.0) * 1.5f;
-                return (lick, -2f, 1f, 1f);
-            }
-            // 埋头吃：前后点头
-            float nod = -(float)Math.Abs(Math.Sin(seconds * Math.PI * 1.8)) * 3.0f;
-            float bodyBob = (float)Math.Sin(seconds * Math.PI * 1.8) * 0.8f;
-            return (0, nod + bodyBob, 1f + 0.01f * (float)Math.Sin(seconds * Math.PI * 3.6), 1f);
+            // 抬头舔嘴：轻微上升
+            float p2 = (cycle - 0.5f) / 0.5f;
+            float rise = (float)Math.Sin(p2 * Math.PI) * 3f;
+            return ((float)Math.Sin(p2 * Math.PI * 2) * 2f, -rise, 1f, 1f);
         }
         if (_currentAnimation == PetAnimation.None)
         {
@@ -1671,11 +1602,12 @@ internal sealed class PetWindow : LayeredForm
                 float lateralTilt = (float)Math.Sin(((double)_walkWatch.Elapsed.TotalMilliseconds / 280.0) * Math.PI * 2.0) * 1.5f;
                 return (_walkLateralOffset + lateralTilt, _walkBobOffsetY, stretchX, stretchY);
             }
-            // 待机时保持轻微呼吸起伏与偶发抖动，让猫显得有生命
+            // 待机时呼吸起伏 + 左右慢摆
             double ms = Environment.TickCount;
-            float breath = (float)Math.Sin(ms / 900.0) * 0.004f;
-            float restX = _isResting ? 0f : (float)Math.Sin(ms / 5000.0) * 1.6f;
-            return (restX, -(float)Math.Abs(Math.Sin((ms % 74000) / 74000.0 * Math.PI)) * 0.6f, 1f + breath, 1f - breath);
+            float breath = (float)Math.Sin(ms / 900.0) * 0.012f;
+            float restX = _isResting ? 0f : (float)Math.Sin(ms / 5000.0) * 2.5f;
+            float restSway = (float)Math.Sin(ms / 3000.0) * 1.5f;
+            return (restX + restSway, -(float)Math.Abs(Math.Sin((ms % 74000) / 74000.0 * Math.PI)) * 1.2f, 1f + breath, 1f - breath);
         }
 
         float duration = _currentAnimation switch
@@ -1718,12 +1650,10 @@ internal sealed class PetWindow : LayeredForm
             }
             case PetAnimation.Lick:
             {
-                // 舔毛：头部左右倾斜 + 点头，更自然的舔毛动作
-                float headTilt = (float)Math.Sin(t * Math.PI * 6.0) * 4.0f;
-                float nod = (float)Math.Sin(t * Math.PI * 4.0) * 2.5f;
-                float stretch = 1f + (float)Math.Sin(t * Math.PI * 8.0) * 0.025f;
-                float settle = (float)Math.Sin(t * Math.PI) * 0.02f;
-                return (headTilt, nod, stretch + settle, 1f - settle);
+                // 舔毛配合帧切换：两帧间摆头 + 点头
+                float headTilt = (float)Math.Sin(t * Math.PI * 4.0) * 6f;
+                float nod = (float)Math.Sin(t * Math.PI * 3.0) * 4f;
+                return (headTilt, nod, 1f, 1f);
             }
             case PetAnimation.Shake:
             {
@@ -1790,11 +1720,17 @@ internal sealed class PetWindow : LayeredForm
         return 1f + c3 * (float)Math.Pow(t - 1f, 3) + c1 * (float)Math.Pow(t - 1f, 2);
     }
 
+    private static int _renderLogCount = 0;
     private void RenderFrame()
     {
         if (!IsHandleCreated || Width <= 0 || Height <= 0)
         {
             return;
+        }
+        _renderLogCount++;
+        if (_renderLogCount <= 3 || _renderLogCount % 500 == 0)
+        {
+            try { File.AppendAllText(Path.Combine(Path.GetTempPath(), "pet-debug.txt"), $"RenderFrame#{_renderLogCount}: Size={Size}, Loc={Location}, Visible={Visible}, Handle={Handle}\n"); } catch { }
         }
 
         if (_currentAnimation != PetAnimation.None)
@@ -1908,18 +1844,10 @@ internal sealed class PetWindow : LayeredForm
         _idleSprite.Dispose();
         _lickSprite1.Dispose();
         _lickSprite2.Dispose();
-        _lickSprite3.Dispose();
         _walkSprite1.Dispose();
         _walkSprite2.Dispose();
-        _walkSprite3.Dispose();
-        _walkSprite4.Dispose();
-        _walkSprite5.Dispose();
-        _walkSprite6.Dispose();
-        _walkSprite7.Dispose();
-        _walkSprite8.Dispose();
         _eatSprite1.Dispose();
         _eatSprite2.Dispose();
-        _eatSprite3.Dispose();
         _sleepSprite.Dispose();
         _aiChatWindow?.Close();
         base.OnFormClosing(e);
@@ -2147,6 +2075,7 @@ internal sealed class ChatSettings
     public string BaseUrl { get; set; } = "https://api.deepseek.com/v1";
     public string Model { get; set; } = "deepseek-chat";
     public string ApiKey { get; set; } = string.Empty;
+    public float ScaleFactor { get; set; } = 0.85f;
 
     public static readonly string[] CandidateModels =
     [
@@ -3255,11 +3184,17 @@ internal abstract class LayeredForm : Form
         }
     }
 
+    private static int _setBitmapLogCount = 0;
     protected void SetBitmap(Bitmap bitmap)
     {
         if (!IsHandleCreated)
         {
             return;
+        }
+        _setBitmapLogCount++;
+        if (_setBitmapLogCount <= 3 || _setBitmapLogCount % 500 == 0)
+        {
+            try { File.AppendAllText(Path.Combine(Path.GetTempPath(), "pet-debug.txt"), $"SetBitmap#{_setBitmapLogCount}: bitmap={bitmap.Width}x{bitmap.Height}, .NET=({Left},{Top}), Visible={Visible}\n"); } catch { }
         }
 
         IntPtr screenDc = NativeMethods.GetDC(IntPtr.Zero);
@@ -3293,6 +3228,12 @@ internal abstract class LayeredForm : Form
                 0,
                 ref blend,
                 NativeMethods.UlwAlpha);
+
+            int err = Marshal.GetLastWin32Error();
+            if (err != 0)
+            {
+                try { File.AppendAllText(Path.Combine(Path.GetTempPath(), "pet-debug.txt"), $"UpdateLayeredWindow FAILED: GetLastError={err}\n"); } catch { }
+            }
         }
         finally
         {
