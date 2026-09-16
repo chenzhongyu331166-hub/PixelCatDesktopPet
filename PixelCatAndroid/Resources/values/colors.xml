@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cat_orange">#FFB464</color>
+    <color name="cat_dark_orange">#DC8C46</color>
+    <color name="cat_eye">#282828</color>
+    <color name="cat_nose">#FF7878</color>
+    <color name="cat_whisker">#B4B4B4</color>
+    <color name="cat_ear_inner">#FF9696</color>
+    <color name="bubble_bg">#FFFFFF</color>
+    <color name="bubble_text">#323232</color>
+    <color name="bubble_border">#C8C8C8</color>
+</resources>

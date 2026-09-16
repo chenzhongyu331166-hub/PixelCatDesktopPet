@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">像素猫咪</string>
+    <string name="cat_thinking">让我想想...</string>
+    <string name="cat_hello">喵~你好呀！</string>
+    <string name="cat_idle">要和我聊天吗？</string>
+    <string name="service_started">桌宠已启动</string>
+    <string name="service_stopped">桌宠已停止</string>
+    <string name="permission_overlay_needed">请授予悬浮窗权限</string>
+    <string name="permission_granted">权限已授予</string>
+    <string name="api_not_configured">未配置 API，使用预设回复</string>
+</resources>
