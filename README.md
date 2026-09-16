@@ -148,6 +148,18 @@ PixelCatDesktopPet/
 
 ---
 
+## 跨平台版本
+
+| 平台 | 技术栈 | 目录 | 状态 |
+|------|--------|------|------|
+| Windows | C# WinForms + Win32 API | `PixelCatDesktopPet/` | ✅ 完成 |
+| macOS / Linux | C# Avalonia UI + SkiaSharp | `PixelCatDesktop/` | 🚧 开发中 |
+| Android | C# .NET for Android + SkiaSharp | `PixelCatAndroid/` | 🚧 开发中 |
+
+> iOS 版本受限于 Apple 不支持系统级悬浮窗，需要在 App 内运行。未来考虑。
+
+---
+
 ## 常见问题
 
 **Q: 为什么猫咪看不到？**
@@ -157,7 +169,7 @@ A: 确保已安装 [.NET 8.0 Desktop Runtime](https://dotnet.microsoft.com/downl
 A: 右键猫咪 → AI 聊天设置 → 选择提供商 → 填入 API Key → 保存。
 
 **Q: 支持 macOS / Linux 吗？**
-A: 当前版本仅支持 Windows。可考虑迁移至 [Avalonia UI](https://avaloniaui.net/) 实现跨平台。
+A: 当前 Windows 版已完成。macOS/Linux 版（Avalonia UI）和 Android 版正在开发中，见 `PixelCatDesktop/` 和 `PixelCatAndroid/` 目录。
 
 **Q: 如何参与贡献？**
 A: 欢迎提交 Issue 和 Pull Request！详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
